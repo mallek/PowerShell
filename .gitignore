@@ -1,0 +1,9 @@
+# Transient PowerShellGet metadata (regenerated on demand)
+InstalledScriptInfos/
+**/InstalledScriptInfos/
+
+# Editor / OS noise
+*.swp
+*~
+.DS_Store
+Thumbs.db
