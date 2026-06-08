@@ -55,7 +55,7 @@ if (Get-Module -ListAvailable PSFzf -ErrorAction SilentlyContinue) {
 Import-Module Posh-Git -ErrorAction SilentlyContinue
 
 # Expected modules - warn (don't silently swallow) if one goes missing or fails.
-foreach ($mod in @('PSColor', 'Write-Ascii', 'StreamUtils', 'StringUtils', 'Profile')) {
+foreach ($mod in @('PSColor', 'Write-Ascii', 'StreamUtils', 'StringUtils', 'Profile', 'AICommand')) {
     if (-not (Get-Module -ListAvailable -Name $mod)) {
         Write-Warning "Profile module '$mod' not found -- skipping. Restore it or run: Install-Module $mod"
         continue
