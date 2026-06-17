@@ -1,4 +1,4 @@
-#
+﻿#
 # Spawn PowerShell Module
 # Launches a fresh agent CLI session in a new Windows Terminal tab,
 # pointed at a self-contained handoff/kickoff file.
@@ -70,6 +70,9 @@ function Start-AgentSession {
         '--', 'pwsh.exe', '-NoExit', '-Command', $claude
     )
 
+    # Human-readable rendering for confirm-first display only. The authoritative
+    # launch is the $wtArgs splat below; PowerShell quotes those args natively,
+    # so this string is an approximation, not a byte-exact copy of what runs.
     $display = 'wt.exe ' + (($wtArgs | ForEach-Object {
         if ($_ -match '\s') {
             '"' + $_ + '"'

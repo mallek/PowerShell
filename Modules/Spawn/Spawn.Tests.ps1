@@ -1,4 +1,4 @@
-$here = Split-Path -Parent $MyInvocation.MyCommand.Path
+﻿$here = Split-Path -Parent $MyInvocation.MyCommand.Path
 Import-Module (Join-Path $here 'Spawn.psd1') -Force
 
 Describe 'Start-AgentSession' {
@@ -28,6 +28,15 @@ Describe 'Start-AgentSession' {
     It 'defaults the title to the handoff base name' {
         $out = Start-AgentSession -HandoffFile $script:hf -Model sonnet -WorkDir $script:wd -DryRun
         $out | Should -Match '--title topic--plan'
+    }
+
+    It 'quotes a space-containing WorkDir in the DryRun display' {
+        $spaceDir = Join-Path $TestDrive 'work dir'
+        New-Item -ItemType Directory -Path $spaceDir | Out-Null
+        $spaceFile = Join-Path $spaceDir 'topic--plan.md'
+        Set-Content -LiteralPath $spaceFile -Value '# h'
+        $out = Start-AgentSession -HandoffFile $spaceFile -Model sonnet -WorkDir $spaceDir -DryRun
+        $out | Should -Match ([regex]::Escape('"' + $spaceDir + '"'))
     }
 
     It 'resolves the spawn alias to the function' {
