@@ -25,6 +25,21 @@ Describe 'Start-AgentSession' {
         $out | Should -Match '--dangerously-skip-permissions'
     }
 
+    It 'omits remote-control by default' {
+        $out = Start-AgentSession -HandoffFile $script:hf -Model sonnet -WorkDir $script:wd -DryRun
+        $out | Should -Not -Match '--remote-control'
+    }
+
+    It 'names the remote-control session after the title, before the prompt' {
+        $out = Start-AgentSession -HandoffFile $script:hf -Model sonnet -WorkDir $script:wd -RemoteControl -DryRun
+        $out | Should -Match "--remote-control topic--plan 'Read "
+    }
+
+    It 'sanitizes the remote-control name so quoting cannot break' {
+        $out = Start-AgentSession -HandoffFile $script:hf -Model sonnet -WorkDir $script:wd -Title "it's a plan" -RemoteControl -DryRun
+        $out | Should -Match '--remote-control it-s-a-plan '
+    }
+
     It 'defaults the title to the handoff base name' {
         $out = Start-AgentSession -HandoffFile $script:hf -Model sonnet -WorkDir $script:wd -DryRun
         $out | Should -Match '--title topic--plan'

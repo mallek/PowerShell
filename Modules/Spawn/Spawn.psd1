@@ -1,6 +1,6 @@
 @{
     RootModule = 'Spawn.psm1'
-    ModuleVersion = '1.0.1'
+    ModuleVersion = '1.1.0'
     GUID = 'a7f3c9d2-5e81-4b6a-9c4d-2f8e1a3b7d60'
     Author = 'Travis Haley'
     CompanyName = 'Personal'
@@ -15,6 +15,9 @@
         PSData = @{
             Tags = @('AI', 'Claude', 'Productivity', 'Spawn', 'Handoff')
             ReleaseNotes = @'
+Version 1.1.0
+- RemoteControl switch: --remote-control named after the tab title (always named, or the flag would swallow the positional prompt)
+
 Version 1.0.1
 - Neutral default window name (agent-relay)
 
