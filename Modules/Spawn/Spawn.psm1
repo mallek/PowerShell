@@ -23,7 +23,7 @@ function Start-AgentSession {
     .PARAMETER Title
         Tab title. Defaults to the handoff file's base name.
     .PARAMETER Window
-        Named Windows Terminal window. Defaults to marvin-relay.
+        Named Windows Terminal window. Defaults to agent-relay.
     .PARAMETER SkipPermissions
         Add --dangerously-skip-permissions (forward authoring phases only).
     .PARAMETER DryRun
@@ -35,7 +35,7 @@ function Start-AgentSession {
         [Parameter(Mandatory)][ValidateSet('opus', 'sonnet', 'fable', 'haiku')][string]$Model,
         [Parameter(Mandatory)][string]$WorkDir,
         [string]$Title,
-        [string]$Window = 'marvin-relay',
+        [string]$Window = 'agent-relay',
         [switch]$SkipPermissions,
         [switch]$DryRun
     )

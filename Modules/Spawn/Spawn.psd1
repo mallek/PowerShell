@@ -1,6 +1,6 @@
 @{
     RootModule = 'Spawn.psm1'
-    ModuleVersion = '1.0.0'
+    ModuleVersion = '1.0.1'
     GUID = 'a7f3c9d2-5e81-4b6a-9c4d-2f8e1a3b7d60'
     Author = 'Travis Haley'
     CompanyName = 'Personal'
@@ -15,6 +15,9 @@
         PSData = @{
             Tags = @('AI', 'Claude', 'Productivity', 'Spawn', 'Handoff')
             ReleaseNotes = @'
+Version 1.0.1
+- Neutral default window name (agent-relay)
+
 Version 1.0.0
 - Start-AgentSession: open a new Windows Terminal tab running the agent CLI
 - spawn alias

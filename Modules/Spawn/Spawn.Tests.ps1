@@ -10,7 +10,7 @@ Describe 'Start-AgentSession' {
 
     It 'builds a wt.exe command with the named window, model, and fixed prompt' {
         $out = Start-AgentSession -HandoffFile $script:hf -Model sonnet -WorkDir $script:wd -DryRun
-        $out | Should -Match 'wt\.exe -w marvin-relay new-tab'
+        $out | Should -Match 'wt\.exe -w agent-relay new-tab'
         $out | Should -Match 'claude --model sonnet'
         $out | Should -Match ([regex]::Escape("Read $script:hf and do what it says."))
     }
