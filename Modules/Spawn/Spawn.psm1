@@ -26,10 +26,12 @@ function Start-AgentSession {
         Named Windows Terminal window. Defaults to agent-relay.
     .PARAMETER SkipPermissions
         Add --dangerously-skip-permissions (forward authoring phases only).
-    .PARAMETER RemoteControl
-        Enable Remote Control (--remote-control), named after the tab title so
-        the session is findable from the app. Only works on accounts where
-        Remote Control is available.
+    .PARAMETER NoRemoteControl
+        Opt out of Remote Control. By default every session launches with
+        --remote-control (named after the tab title) so it is findable and
+        steerable from the app - the right default for phone/away work. Pass
+        -NoRemoteControl for a truly fire-and-forget sweep, or on an account
+        where Remote Control is not available.
     .PARAMETER DryRun
         Return the exact command string without launching anything.
     #>
@@ -41,7 +43,7 @@ function Start-AgentSession {
         [string]$Title,
         [string]$Window = 'agent-relay',
         [switch]$SkipPermissions,
-        [switch]$RemoteControl,
+        [switch]$NoRemoteControl,
         [switch]$DryRun
     )
 
@@ -65,7 +67,8 @@ function Start-AgentSession {
     if ($SkipPermissions) {
         $claude += ' --dangerously-skip-permissions'
     }
-    if ($RemoteControl) {
+    if (-not $NoRemoteControl) {
+        # RC is on by default so the session is findable/steerable from the app.
         # The flag's name value is optional and the prompt is positional, so an
         # unnamed --remote-control would swallow the prompt as its name. Always
         # pass a name; sanitize so it cannot break the command-string quoting.
