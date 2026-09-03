@@ -1,4 +1,4 @@
-﻿$here = Split-Path -Parent $MyInvocation.MyCommand.Path
+$here = Split-Path -Parent $MyInvocation.MyCommand.Path
 Import-Module (Join-Path $here 'Spawn.psd1') -Force
 
 Describe 'Start-AgentSession' {
@@ -43,6 +43,39 @@ Describe 'Start-AgentSession' {
     It 'sanitizes the remote-control name so quoting cannot break' {
         $out = Start-AgentSession -HandoffFile $script:hf -Model sonnet -WorkDir $script:wd -Title "it's a plan" -DryRun
         $out | Should -Match '--remote-control it-s-a-plan '
+    }
+
+    It 'omits effort by default' {
+        $out = Start-AgentSession -HandoffFile $script:hf -Model sonnet -WorkDir $script:wd -DryRun
+        $out | Should -Not -Match '--effort'
+    }
+
+    It 'includes the effort level when specified' {
+        $out = Start-AgentSession -HandoffFile $script:hf -Model opus -WorkDir $script:wd -Effort xhigh -DryRun
+        $out | Should -Match 'claude --model opus --effort xhigh'
+    }
+
+    It 'rejects an effort level outside the valid set' {
+        { Start-AgentSession -HandoffFile $script:hf -Model sonnet -WorkDir $script:wd -Effort turbo -DryRun } | Should -Throw
+    }
+
+    It 'rejects max, which is an in-session escalation rather than a launch-time level' {
+        { Start-AgentSession -HandoffFile $script:hf -Model opus -WorkDir $script:wd -Effort max -DryRun } | Should -Throw
+    }
+
+    It 'forces transcript persistence on the spawned session' {
+        $out = Start-AgentSession -HandoffFile $script:hf -Model sonnet -WorkDir $script:wd -DryRun
+        $out | Should -Match ([regex]::Escape("CLAUDE_CODE_FORCE_SESSION_PERSISTENCE='1'"))
+    }
+
+    It 'clears the inherited child-session marker that disables the transcript' {
+        $out = Start-AgentSession -HandoffFile $script:hf -Model sonnet -WorkDir $script:wd -DryRun
+        $out | Should -Match ([regex]::Escape('$env:CLAUDE_CODE_CHILD_SESSION=$null'))
+    }
+
+    It 'clears inherited NO_COLOR so the spawned session is not monochrome' {
+        $out = Start-AgentSession -HandoffFile $script:hf -Model sonnet -WorkDir $script:wd -DryRun
+        $out | Should -Match ([regex]::Escape('$env:NO_COLOR=$null'))
     }
 
     It 'defaults the title to the handoff base name' {

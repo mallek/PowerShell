@@ -1,4 +1,4 @@
-﻿#
+#
 # Spawn PowerShell Module
 # Launches a fresh agent CLI session in a new Windows Terminal tab,
 # pointed at a self-contained handoff/kickoff file.
@@ -20,6 +20,12 @@ function Start-AgentSession {
         Target model tier: opus, sonnet, fable, or haiku.
     .PARAMETER WorkDir
         Absolute path to launch in (wt -d). Must exist.
+    .PARAMETER Effort
+        Reasoning effort for the session: low, medium, high, or xhigh. Omit to leave
+        the CLI default in place. Independent of Model - Model sets the capability
+        ceiling, Effort sets how much reasoning is spent under it.
+        'max' is deliberately NOT accepted here: it is an in-session escalation, made
+        by someone watching the work, not a level chosen blind at launch time.
     .PARAMETER Title
         Tab title. Defaults to the handoff file's base name.
     .PARAMETER Window
@@ -42,6 +48,7 @@ function Start-AgentSession {
         [Parameter(Mandatory)][string]$WorkDir,
         [string]$Title,
         [string]$Window = 'agent-relay',
+        [ValidateSet('low', 'medium', 'high', 'xhigh')][string]$Effort,
         [switch]$SkipPermissions,
         [switch]$NoRemoteControl,
         [switch]$DryRun
@@ -63,7 +70,32 @@ function Start-AgentSession {
 
     $prompt = "Read $resolvedFile and do what it says."
 
-    $claude = "claude --model $Model"
+    # Two inherited environment variables have to be corrected on the CLI's own
+    # process, and both are set here in the child command rather than on this one.
+    #
+    # NO_COLOR: when spawn is launched from inside an agent tool call, the tool
+    # environment has NO_COLOR=1 set and the new WT tab inherits it, so the spawned
+    # CLI renders monochrome. A shell-launched tab (e.g. a keyboard macro) has no
+    # NO_COLOR and is unaffected. Clear it and force truecolor: FORCE_COLOR=3 forces
+    # the color level, COLORTERM=truecolor keeps the palette at 16m.
+    #
+    # CLAUDE_CODE_CHILD_SESSION: inherited the same way, and it makes the new
+    # session's claude disable transcript persistence - it looks like a nested child
+    # rather than a real interactive session, so the transcript is never written and
+    # /resume can never recover it. Clear the marker and set the documented override.
+    #
+    # Setting these in the child command is only safe because of the -EncodedCommand
+    # below. wt.exe treats ';' as its own command separator even inside a quoted
+    # argument after '--', so a plain "set env; run claude" string gets split apart;
+    # Base64 removes that constraint, which is why these do not need to mutate the
+    # launching shell's own environment to take effect.
+    $prep = "`$env:NO_COLOR=`$null; `$env:FORCE_COLOR='3'; `$env:COLORTERM='truecolor'; " +
+            "`$env:CLAUDE_CODE_CHILD_SESSION=`$null; `$env:CLAUDE_CODE_FORCE_SESSION_PERSISTENCE='1'"
+
+    $claude = "$prep; claude --model $Model"
+    if ($Effort) {
+        $claude += " --effort $Effort"
+    }
     if ($SkipPermissions) {
         $claude += ' --dangerously-skip-permissions'
     }
@@ -77,18 +109,33 @@ function Start-AgentSession {
     }
     $claude += " '$prompt'"
 
+    # wt.exe treats ';' as its OWN command/tab separator, so a -Command string that
+    # contains semicolons (the env prep does) gets shredded into multiple tabs before
+    # pwsh ever sees it. Encode the whole command as Base64/UTF-16LE and pass it via
+    # -EncodedCommand: the payload is pure alphanumerics, so no semicolon, quote, or
+    # space survives to reach wt.exe's parser.
+    $encoded = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($claude))
+
     $wtArgs = @(
+        '-w', $Window,
+        'new-tab',
+        '-d', $resolvedDir,
+        '--title', $Title,
+        '--', 'pwsh.exe', '-NoExit', '-EncodedCommand', $encoded
+    )
+
+    # Human-readable rendering for confirm-first display only. Shows the DECODED
+    # command the spawned pwsh will run, not the Base64 blob - the authoritative
+    # launch is the $wtArgs splat above. PowerShell quotes those args natively, so
+    # this string is an approximation, not a byte-exact copy of what runs.
+    $displayArgs = @(
         '-w', $Window,
         'new-tab',
         '-d', $resolvedDir,
         '--title', $Title,
         '--', 'pwsh.exe', '-NoExit', '-Command', $claude
     )
-
-    # Human-readable rendering for confirm-first display only. The authoritative
-    # launch is the $wtArgs splat below; PowerShell quotes those args natively,
-    # so this string is an approximation, not a byte-exact copy of what runs.
-    $display = 'wt.exe ' + (($wtArgs | ForEach-Object {
+    $display = 'wt.exe ' + (($displayArgs | ForEach-Object {
         if ($_ -match '\s') {
             '"' + $_ + '"'
         } else {
@@ -99,15 +146,6 @@ function Start-AgentSession {
     if ($DryRun) {
         return $display
     }
-
-    # wt.exe (and everything it spawns) inherits CLAUDE_CODE_CHILD_SESSION from
-    # this process, which makes the new session's own claude disable transcript
-    # persistence - it looks like a nested child, not a real interactive session.
-    # Force it back on for the launched process tree. Set here, not embedded in
-    # the command string above - wt.exe treats ';' as its own command separator
-    # even inside a quoted argument after '--', so a "set env; run claude" string
-    # gets split apart and breaks the launch.
-    $env:CLAUDE_CODE_FORCE_SESSION_PERSISTENCE = '1'
 
     & wt.exe @wtArgs
 }
