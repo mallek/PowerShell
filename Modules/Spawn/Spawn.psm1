@@ -100,6 +100,15 @@ function Start-AgentSession {
         return $display
     }
 
+    # wt.exe (and everything it spawns) inherits CLAUDE_CODE_CHILD_SESSION from
+    # this process, which makes the new session's own claude disable transcript
+    # persistence - it looks like a nested child, not a real interactive session.
+    # Force it back on for the launched process tree. Set here, not embedded in
+    # the command string above - wt.exe treats ';' as its own command separator
+    # even inside a quoted argument after '--', so a "set env; run claude" string
+    # gets split apart and breaks the launch.
+    $env:CLAUDE_CODE_FORCE_SESSION_PERSISTENCE = '1'
+
     & wt.exe @wtArgs
 }
 
