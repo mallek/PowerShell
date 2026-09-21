@@ -1,0 +1,194 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Management.Automation.PSCustomObject</T>
+      <T>System.Object</T>
+    </TN>
+    <MS>
+      <S N="Name">Pester</S>
+      <S N="Version">5.8.0</S>
+      <Obj N="Type" RefId="1">
+        <TN RefId="1">
+          <T>Microsoft.PowerShell.PSResourceGet.UtilClasses.ResourceType</T>
+          <T>System.Enum</T>
+          <T>System.ValueType</T>
+          <T>System.Object</T>
+        </TN>
+        <ToString>Module</ToString>
+        <I32>1</I32>
+      </Obj>
+      <S N="Description">Pester provides a framework for running BDD style Tests to execute and validate PowerShell commands inside of PowerShell and offers a powerful set of Mocking Functions that allow tests to mimic and mock the functionality of any command inside of a piece of PowerShell code being tested. Pester tests can execute any command or script that is accessible to a pester test file. This can include functions, Cmdlets, Modules and scripts. Pester can be run in ad hoc style in a console or it can be integrated into the Build scripts of a Continuous Integration system.</S>
+      <S N="Author">Pester Team</S>
+      <S N="CompanyName">Pester</S>
+      <S N="Copyright">Copyright (c) 2026 by Pester Team, licensed under Apache 2.0 License.</S>
+      <DT N="PublishedDate">2026-06-30T19:37:58.01</DT>
+      <DT N="InstalledDate">2026-07-02T16:20:12.7697247-06:00</DT>
+      <B N="IsPrerelease">false</B>
+      <Nil N="UpdatedDate" />
+      <URI N="LicenseUri">https://www.apache.org/licenses/LICENSE-2.0.html</URI>
+      <URI N="ProjectUri">https://github.com/Pester/Pester</URI>
+      <URI N="IconUri">https://raw.githubusercontent.com/pester/Pester/main/images/pester.PNG</URI>
+      <Obj N="Tags" RefId="2">
+        <TN RefId="2">
+          <T>System.String[]</T>
+          <T>System.Array</T>
+          <T>System.Object</T>
+        </TN>
+        <LST>
+          <S>powershell</S>
+          <S>unit_testing</S>
+          <S>bdd</S>
+          <S>tdd</S>
+          <S>mocking</S>
+          <S>PSEdition_Core</S>
+          <S>PSEdition_Desktop</S>
+          <S>Windows</S>
+          <S>Linux</S>
+          <S>MacOS</S>
+          <S>PSModule</S>
+          <S>PSFunction_Invoke-Pester</S>
+          <S>PSCommand_Invoke-Pester</S>
+          <S>PSFunction_Describe</S>
+          <S>PSCommand_Describe</S>
+          <S>PSFunction_Context</S>
+          <S>PSCommand_Context</S>
+          <S>PSFunction_It</S>
+          <S>PSCommand_It</S>
+          <S>PSFunction_Mock</S>
+          <S>PSCommand_Mock</S>
+          <S>PSFunction_InModuleScope</S>
+          <S>PSCommand_InModuleScope</S>
+          <S>PSFunction_BeforeDiscovery</S>
+          <S>PSCommand_BeforeDiscovery</S>
+          <S>PSFunction_BeforeAll</S>
+          <S>PSCommand_BeforeAll</S>
+          <S>PSFunction_BeforeEach</S>
+          <S>PSCommand_BeforeEach</S>
+          <S>PSFunction_AfterEach</S>
+          <S>PSCommand_AfterEach</S>
+          <S>PSFunction_AfterAll</S>
+          <S>PSCommand_AfterAll</S>
+          <S>PSFunction_Should</S>
+          <S>PSCommand_Should</S>
+          <S>PSFunction_Add-ShouldOperator</S>
+          <S>PSCommand_Add-ShouldOperator</S>
+          <S>PSFunction_Get-ShouldOperator</S>
+          <S>PSCommand_Get-ShouldOperator</S>
+          <S>PSFunction_Export-NUnitReport</S>
+          <S>PSCommand_Export-NUnitReport</S>
+          <S>PSFunction_ConvertTo-NUnitReport</S>
+          <S>PSCommand_ConvertTo-NUnitReport</S>
+          <S>PSFunction_Export-JUnitReport</S>
+          <S>PSCommand_Export-JUnitReport</S>
+          <S>PSFunction_ConvertTo-JUnitReport</S>
+          <S>PSCommand_ConvertTo-JUnitReport</S>
+          <S>PSFunction_ConvertTo-Pester4Result</S>
+          <S>PSCommand_ConvertTo-Pester4Result</S>
+          <S>PSFunction_New-PesterContainer</S>
+          <S>PSCommand_New-PesterContainer</S>
+          <S>PSFunction_New-PesterConfiguration</S>
+          <S>PSCommand_New-PesterConfiguration</S>
+          <S>PSFunction_Assert-VerifiableMock</S>
+          <S>PSCommand_Assert-VerifiableMock</S>
+          <S>PSFunction_Assert-MockCalled</S>
+          <S>PSCommand_Assert-MockCalled</S>
+          <S>PSFunction_Set-ItResult</S>
+          <S>PSCommand_Set-ItResult</S>
+          <S>PSFunction_New-MockObject</S>
+          <S>PSCommand_New-MockObject</S>
+          <S>PSFunction_New-Fixture</S>
+          <S>PSCommand_New-Fixture</S>
+          <S>PSIncludes_Function</S>
+        </LST>
+      </Obj>
+      <Obj N="Includes" RefId="3">
+        <TN RefId="3">
+          <T>System.Collections.Hashtable</T>
+          <T>System.Object</T>
+        </TN>
+        <DCT>
+          <En>
+            <S N="Key">Function</S>
+            <Nil N="Value" />
+          </En>
+          <En>
+            <S N="Key">Workflow</S>
+            <Nil N="Value" />
+          </En>
+          <En>
+            <S N="Key">RoleCapability</S>
+            <Nil N="Value" />
+          </En>
+          <En>
+            <S N="Key">Command</S>
+            <Obj N="Value" RefId="4">
+              <TNRef RefId="2" />
+              <LST>
+                <S>Invoke-Pester</S>
+                <S>Describe</S>
+                <S>Context</S>
+                <S>It</S>
+                <S>Mock</S>
+                <S>InModuleScope</S>
+                <S>BeforeDiscovery</S>
+                <S>BeforeAll</S>
+                <S>BeforeEach</S>
+                <S>AfterEach</S>
+                <S>AfterAll</S>
+                <S>Should</S>
+                <S>Add-ShouldOperator</S>
+                <S>Get-ShouldOperator</S>
+                <S>Export-NUnitReport</S>
+                <S>ConvertTo-NUnitReport</S>
+                <S>Export-JUnitReport</S>
+                <S>ConvertTo-JUnitReport</S>
+                <S>ConvertTo-Pester4Result</S>
+                <S>New-PesterContainer</S>
+                <S>New-PesterConfiguration</S>
+                <S>Assert-VerifiableMock</S>
+                <S>Assert-MockCalled</S>
+                <S>Set-ItResult</S>
+                <S>New-MockObject</S>
+                <S>New-Fixture</S>
+              </LST>
+            </Obj>
+          </En>
+          <En>
+            <S N="Key">DscResource</S>
+            <Obj N="Value" RefId="5">
+              <TNRef RefId="2" />
+              <LST />
+            </Obj>
+          </En>
+          <En>
+            <S N="Key">Cmdlet</S>
+            <Obj N="Value" RefId="6">
+              <TNRef RefId="2" />
+              <LST />
+            </Obj>
+          </En>
+        </DCT>
+      </Obj>
+      <S N="PowerShellGetFormatVersion"></S>
+      <S N="ReleaseNotes">https://github.com/pester/Pester/releases/tag/5.8.0</S>
+      <Obj N="Dependencies" RefId="7">
+        <TN RefId="4">
+          <T>Microsoft.PowerShell.PSResourceGet.UtilClasses.Dependency[]</T>
+          <T>System.Array</T>
+          <T>System.Object</T>
+        </TN>
+        <LST />
+      </Obj>
+      <S N="RepositorySourceLocation">https://www.powershellgallery.com/api/v2</S>
+      <S N="Repository">PSGallery</S>
+      <Obj N="AdditionalMetadata" RefId="8">
+        <TNRef RefId="0" />
+        <MS>
+          <S N="NormalizedVersion">5.8.0</S>
+          <S N="IsPrerelease">False</S>
+        </MS>
+      </Obj>
+      <S N="InstalledLocation">C:\Users\travi\Documents\PowerShell\Modules</S>
+    </MS>
+  </Obj>
+</Objs>
