@@ -1,6 +1,6 @@
 @{
     RootModule = 'Marvin.psm1'
-    ModuleVersion = '1.1.0'
+    ModuleVersion = '1.2.0'
     GUID = 'b4e2f8a1-3c7d-4a9e-8f1b-6d5c2e9a7b4f'
     Author = 'Travis Haley'
     CompanyName = 'Personal'
@@ -15,6 +15,9 @@
         PSData = @{
             Tags = @('AI', 'Claude', 'Productivity', 'Assistant', 'MARVIN')
             ReleaseNotes = @'
+Version 1.2.0
+- Start-MarvinSession now names the session for Remote Control (--remote-control, default 'MARVIN'), passed through `marvin`'s existing @args forwarding so that function needed no changes. Spawn names every session it launches, so without this the MARVIN session was the one tab in the group that was not findable or steerable from the app. Override with -Name, or opt out with -NoRemoteControl to match Spawn's switch of the same name. The name is sanitized the same way Spawn sanitizes its own.
+
 Version 1.1.0
 - Start-MarvinSession (alias mstart): opens MARVIN in the shared 'agent-relay' Windows Terminal window, creating that window if it does not exist. This is the entry point the keyboard macro and any desktop shortcut should call. The Spawn module defaults to the same window name, so `spawn` now opens its agent tabs as siblings of the MARVIN session instead of in a separate window.
 - The window name lives in the module rather than in the macro, so it travels with the repo to every machine and the macro never needs editing again. Keep $script:MarvinWindow and the Spawn module's default -Window in sync.

@@ -58,12 +58,20 @@ function Start-MarvinSession {
         and the macro never needs editing again.
     .PARAMETER Window
         Named Windows Terminal window to open in. Defaults to agent-relay.
+    .PARAMETER Name
+        Remote Control name for the session. Defaults to MARVIN. The Spawn module names
+        every session it launches, so without this the MARVIN session is the one tab in
+        the group that is not findable or steerable from the app.
+    .PARAMETER NoRemoteControl
+        Opt out of Remote Control, matching the Spawn module's switch of the same name.
     .PARAMETER DryRun
         Return the command string without launching anything.
     #>
     [CmdletBinding()]
     param(
         [string]$Window = $script:MarvinWindow,
+        [string]$Name = 'MARVIN',
+        [switch]$NoRemoteControl,
         [switch]$DryRun
     )
 
@@ -80,7 +88,16 @@ function Start-MarvinSession {
     $prep = "`$env:NO_COLOR=`$null; `$env:FORCE_COLOR='3'; `$env:COLORTERM='truecolor'; " +
             "`$env:CLAUDE_CODE_CHILD_SESSION=`$null; `$env:CLAUDE_CODE_FORCE_SESSION_PERSISTENCE='1'"
 
-    $command = "$prep; marvin"
+    # `marvin` forwards @args straight through to claude, so the Remote Control flag
+    # rides that passthrough and the function itself needs no changes. Sanitize the
+    # name the same way Spawn does, so it cannot break the command-string quoting.
+    $marvin = 'marvin'
+    if (-not $NoRemoteControl) {
+        $rcName = $Name -replace '[^A-Za-z0-9._-]', '-'
+        $marvin += " --remote-control $rcName"
+    }
+
+    $command = "$prep; $marvin"
 
     # wt.exe treats ';' as its own command/tab separator even inside a quoted argument
     # after '--', so the multi-statement command above would be shredded into extra
